@@ -1,0 +1,44 @@
+#!/bin/bash
+
+for f in ./*.pk3; do
+
+        name=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12-)
+        shortname=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12- | rev | cut -c5- | rev)
+        commandmap='cc.'
+
+        if [[ "$name" == *"$commandmap"* ]]; then
+                echo
+                echo "No thumbnail found."
+                echo
+        else
+
+        if test -f "png/$shortname.png"
+        then
+                echo
+                echo "Error: $shortname.png already exists."
+                echo
+        else
+
+        echo Found: $name
+        echo Extracting map thumbnail...
+        echo
+        unzip -j $f "levelshots/*.*" -d .
+        echo
+
+        echo Removing command map
+        rm *cc.*
+        echo
+
+        echo Converting $name to $shortname.png
+        convert $name $shortname.png
+        mv $shortname.png png/
+        echo Removing $name
+        echo
+        rm -f $name
+        rm -f *.tga
+        echo Done.
+        echo
+        echo
+        fi
+        fi
+done
