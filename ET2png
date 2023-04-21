@@ -1,34 +1,35 @@
 #!/bin/bash
-# Requires ImageMagick and Unzip
+
+# Requires ImageMagick and unzip
 
 mkdir png
 
 for f in ./*.pk3; do
 	name=$(unzip -l $f "maps/*.bsp" | grep .bsp | head -n1 |  awk '{print $4;}' | cut -c 6- | rev | cut -c 5- | rev)
-		
-	if test -f "png/$name.png" then		
+
+	if test -f "png/$name.png"; then
 		echo
 		echo "Error: $name.png already exists."
 		echo
 	else
-		echo Found: $name
-		echo Extracting map thumbnail...
 		echo
-		
+
 		tga=$(unzip -l $f "levelshots/$name.tga" .)
 		jpg=$(unzip -l $f "levelshots/$name.jpg" .)
 		sub="0 files"
-		
+
 		if [[ "$tga" == *"$sub"* ]]; then
 			unzip -j $f "levelshots/$name.jpg" -d .
+			echo "  converting to png..."
 			convert $name.jpg png/$name.png
 			rm -f $name.jpg
 			else
 				unzip -j $f "levelshots/$name.tga" -d .
+				echo "  converting to png..."
 				convert $name.tga png/$name.png
+				convert -flip png/$name.png png/$name.png
 				rm -f $name.tga
 		fi
-		echo
 		echo Done.
 		echo
        fi
