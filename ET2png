@@ -1,43 +1,35 @@
 #!/bin/bash
-
-# Requires ImageMagick and unzip
+# Requires ImageMagick and Unzip
 
 mkdir png
 
 for f in ./*.pk3; do
 	name=$(unzip -l $f "maps/*.bsp" | grep .bsp | head -n1 |  awk '{print $4;}' | cut -c 6- | rev | cut -c 5- | rev)
 		
-	if test -f "png/$name.png"
-		then
-			echo
-			echo "Error: $name.png already exists."
-			echo
-		else
-			echo Found: $name
-			echo Extracting map thumbnail...
-			echo
+	if test -f "png/$name.png" then		
+		echo
+		echo "Error: $name.png already exists."
+		echo
+	else
+		echo Found: $name
+		echo Extracting map thumbnail...
+		echo
 		
-			tga=$(unzip -l $f "levelshots/$name.tga" .)
-			jpg=$(unzip -l $f "levelshots/$name.jpg" .)
-			sub="0 files"
+		tga=$(unzip -l $f "levelshots/$name.tga" .)
+		jpg=$(unzip -l $f "levelshots/$name.jpg" .)
+		sub="0 files"
 		
-			if [[ "$tga" == *"$sub"* ]];
-				then
-				unzip -j $f "levelshots/$name.jpg" -d .
-				convert $name.jpg $name.png
-				else
+		if [[ "$tga" == *"$sub"* ]]; then
+			unzip -j $f "levelshots/$name.jpg" -d .
+			convert $name.jpg png/$name.png
+			rm -f $name.jpg
+			else
 				unzip -j $f "levelshots/$name.tga" -d .
-				convert $name.tga $name.png
-			fi
-			echo
-			mv $name.png png/
-			echo Removing $name.tga
-			echo
-			rm -f $name.tga
-			echo Done.
-			echo
+				convert $name.tga png/$name.png
+				rm -f $name.tga
+		fi
+		echo
+		echo Done.
+		echo
        fi
 done
-	
-rm -f *.tga
-rm -f *.jpg
