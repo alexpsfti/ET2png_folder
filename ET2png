@@ -18,6 +18,10 @@ for f in ./*.pk3; do
 		jpg=$(unzip -l $f "levelshots/$name.jpg" .)
 		sub="0 files"
 
+		if [[ "$tga" == *"$sub"* ]] && [[ "$jpg" == *"$sub"* ]]; then
+		continue
+		fi
+		
 		if [[ "$tga" == *"$sub"* ]]; then
 			unzip -j $f "levelshots/$name.jpg" -d .
 			echo "  converting to png..."
