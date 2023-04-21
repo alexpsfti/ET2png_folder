@@ -39,12 +39,14 @@ for f in ./*.pk3; do
         echo Removing $name
         echo
         rm -f $name
-        rm -f *.tga
-	rm -f *.jpg
-	rm Thumbs.db
         echo Done.
         echo
         echo
         fi
         fi
+rm -f *.tga
+rm -f *.jpg
+echo Done.
+echo
+echo
 done
