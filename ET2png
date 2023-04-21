@@ -1,52 +1,43 @@
 #!/bin/bash
 
-# Requires ImageMagick
+# Requires ImageMagick and unzip
 
 mkdir png
 
 for f in ./*.pk3; do
-
-        name=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12-)
-        shortname=$(echo $name | rev | cut -c5- | rev)
-        commandmap='cc.'
-
-        if [[ "$name" == *"$commandmap"* ]]; then
-                echo
-                echo "No thumbnail found."
-                echo
-        else
-
-        if test -f "png/$shortname.png"
-        then
-                echo
-                echo "Error: $shortname.png already exists."
-                echo
-        else
-
-        echo Found: $name
-        echo Extracting map thumbnail...
-        echo
-        unzip -j $f "levelshots/*.*" -d .
-        echo
-
-        echo Removing command map
-        rm *cc.*
-        echo
-
-        echo Converting $name to $shortname.png
-        convert $name $shortname.png
-        mv $shortname.png png/
-        echo Removing $name
-        echo
-        rm -f $name
-        echo Done.
-        echo
-        echo
-        fi
-        fi
+	name=$(unzip -l $f "maps/*.bsp" | grep .bsp | head -n1 |  awk '{print $4;}' | cut -c 6- | rev | cut -c 5- | rev)
+		
+	if test -f "png/$name.png"
+		then
+			echo
+			echo "Error: $name.png already exists."
+			echo
+		else
+			echo Found: $name
+			echo Extracting map thumbnail...
+			echo
+		
+			tga=$(unzip -l $f "levelshots/$name.tga" .)
+			jpg=$(unzip -l $f "levelshots/$name.jpg" .)
+			sub="0 files"
+		
+			if [[ "$tga" == *"$sub"* ]];
+				then
+				unzip -j $f "levelshots/$name.jpg" -d .
+				convert $name.jpg $name.png
+				else
+				unzip -j $f "levelshots/$name.tga" -d .
+				convert $name.tga $name.png
+			fi
+			echo
+			mv $name.png png/
+			echo Removing $name.tga
+			echo
+			rm -f $name.tga
+			echo Done.
+			echo
+       fi
+done
+	
 rm -f *.tga
 rm -f *.jpg
-echo Done.
-echo
-echo
-done
