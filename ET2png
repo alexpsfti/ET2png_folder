@@ -7,7 +7,7 @@ mkdir png
 for f in ./*.pk3; do
 
         name=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12-)
-        shortname=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12- | rev | cut -c5- | rev)
+        shortname=$(echo $name | rev | cut -c5- | rev)
         commandmap='cc.'
 
         if [[ "$name" == *"$commandmap"* ]]; then
@@ -41,6 +41,7 @@ for f in ./*.pk3; do
         rm -f $name
         rm -f *.tga
 	rm -f *.jpg
+	rm Thumbs.db
         echo Done.
         echo
         echo
