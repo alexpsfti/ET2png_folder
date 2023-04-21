@@ -2,6 +2,8 @@
 
 # Requires ImageMagick
 
+mkdir png
+
 for f in ./*.pk3; do
 
         name=$(unzip -l $f "levelshots/*.tga" | grep .tga | head -n1 |  awk '{print $4;}' | cut -c12-)
@@ -38,6 +40,7 @@ for f in ./*.pk3; do
         echo
         rm -f $name
         rm -f *.tga
+	rm -f *.jpg
         echo Done.
         echo
         echo
